@@ -28,16 +28,26 @@ class Config:
 
 
 def load_config_from_env():
-    api_token = os.environ.get("CLOUDFLARE_API_TOKEN")
-    zone_id = os.environ.get("CLOUDFLARE_ZONE_ID")
-    record_name = os.environ.get("CLOUDFLARE_RECORD_NAME")
+    api_token = (os.environ.get("CLOUDFLARE_API_TOKEN") or "").strip()
+    zone_id = (os.environ.get("CLOUDFLARE_ZONE_ID") or "").strip()
+    record_name = (os.environ.get("CLOUDFLARE_RECORD_NAME") or "").strip()
 
-    if api_token == "CLOUDFLARE_API_TOKEN":
-        api_token = None
+    missing = []
+    if not api_token:
+        missing.append("CLOUDFLARE_API_TOKEN")
+    if not zone_id:
+        missing.append("CLOUDFLARE_ZONE_ID")
+    if not record_name:
+        missing.append("CLOUDFLARE_RECORD_NAME")
+    if missing:
+        logging.error("Missing required environment variable(s): %s", ", ".join(missing))
+        return None
 
-    if not all([api_token, zone_id, record_name]):
+    # Catch obvious placeholders while avoiding brittle one-off exact-value rules.
+    token_upper = api_token.upper()
+    if "TOKEN" in token_upper and ("YOUR" in token_upper or "CLOUDFLARE" in token_upper):
         logging.error(
-            "Missing one or more environment variables: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ZONE_ID, CLOUDFLARE_RECORD_NAME"
+            "CLOUDFLARE_API_TOKEN looks like a placeholder value. Set a real API token in .env."
         )
         return None
 

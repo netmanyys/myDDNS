@@ -31,7 +31,7 @@ python3 -m pip install requests
 Use the wrapper script:
 
 ```bash
-/Users/yan/Dev/my-ddns/run_ddns.sh
+$MYPATH/run_ddns.sh
 ```
 
 What it does:
@@ -39,14 +39,14 @@ What it does:
 - Gets your public IP from `api.ipify.org`
 - Reads the Cloudflare DNS `A` record
 - Updates the record only if the IP changed
-- Writes logs to console and `/Users/yan/Dev/my-ddns/ddns_updater.log`
+- Writes logs to console and `$MYPATH/ddns_updater.log`
 
 ## Test
 
 Run unit tests:
 
 ```bash
-python3 -m unittest discover -s /Users/yan/Dev/my-ddns/tests -v
+python3 -m unittest discover -s $MYPATH/tests -v
 ```
 
 Current tests cover:
@@ -58,7 +58,7 @@ Current tests cover:
 Run optional live Cloudflare integration test (reads `.env`):
 
 ```bash
-RUN_CLOUDFLARE_INTEGRATION_TESTS=1 python3 -m unittest discover -s /Users/yan/Dev/my-ddns/tests -v
+RUN_CLOUDFLARE_INTEGRATION_TESTS=1 python3 -m unittest discover -s $MYPATH/tests -v
 ```
 
 This integration test performs a real DNS-record lookup only (no update/write).
@@ -73,4 +73,4 @@ CLOUDFLARE_EXPECTED_CONTENT_IP='x.x.x.x'
 
 ## Git Safety
 
-`.env` is ignored by `/Users/yan/Dev/my-ddns/.gitignore` so secrets are not committed.
+`.env` is ignored by `$MYPATH/.gitignore` so secrets are not committed.
